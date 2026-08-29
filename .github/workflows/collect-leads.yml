@@ -1,0 +1,46 @@
+name: 物件情報自動収集
+
+on:
+  schedule:
+    # 6時間ごとに巡回（UTC基準）。元データ自体は年2回更新が中心のため、
+    # 頻度自体はデータソース側の更新に合わせて調整してよい。
+    - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collect-leads
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+
+      - name: Fetch leads
+        id: fetch
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        run: node scripts/fetch-leads.mjs
+
+      - name: Generate leads page
+        if: steps.fetch.outputs.new_count != '0'
+        run: node scripts/generate-leads-page.mjs
+
+      - name: Commit and push changes
+        if: steps.fetch.outputs.new_count != '0'
+        run: |
+          git config user.name "care-car-leads-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/leads.json leads.html
+          git commit -m "chore: 新着物件情報を自動更新 (+${{ steps.fetch.outputs.new_count }}件)"
+          git push

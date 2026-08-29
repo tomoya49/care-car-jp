@@ -1,0 +1,12 @@
+{
+  "name": "care-car-jp-leads",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "leads:fetch": "node scripts/fetch-leads.mjs",
+    "leads:page": "node scripts/generate-leads-page.mjs"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.6.3"
+  }
+}

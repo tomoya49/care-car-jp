@@ -1,0 +1,19 @@
+[
+  {
+    "id": "example-pref",
+    "label": "（例）〇〇県 介護サービス事業所データ",
+    "enabled": false,
+    "url": "REPLACE_ME https://www.mhlw.go.jp/stf/kaigo-kouhyou_opendata.html から対象都道府県のCSV配布リンクを確認し、実際のダウンロードURLに置き換えてください",
+    "encoding": "shift_jis",
+    "keyField": "事業所番号",
+    "fieldMap": {
+      "事業所番号": "officeCode",
+      "事業所名": "name",
+      "サービス種類": "serviceType",
+      "所在地(住所)": "address",
+      "電話番号": "phone",
+      "指定年月日": "designatedDate"
+    },
+    "notes": "厚生労働省「介護サービス情報公表システム」オープンデータ（https://www.mhlw.go.jp/stf/kaigo-kouhyou_opendata.html）は無償・二次利用可の公式データで、年2回（6月末・12月末）更新されます。都道府県のオープンデータポータルが同データを月次などより高頻度で二次配布している場合もあるため、対象地域のポータルも確認してください。CSVの列名はソースにより表記ゆれがあるため、実際のヘッダー行を確認して fieldMap のキー（左側）を実物に合わせて調整してください。"
+  }
+]
