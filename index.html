@@ -154,6 +154,32 @@ tbody th{font-weight:700;width:46%}
 td.p{font-weight:800;color:var(--teal);white-space:nowrap}
 tbody tr:last-child th,tbody tr:last-child td{border-bottom:none}
 
+/* ---------- comparison ---------- */
+.sec-cmp{background:var(--teal-l)}
+.cmp table{min-width:500px}
+.cmp tbody th{width:34%}
+.cmp thead th small{display:block;font-weight:400;font-size:11px;opacity:.85;margin-top:3px}
+.cmp td{font-size:13px;color:var(--gray)}
+.cmp td.ok{color:var(--teal-d);font-weight:700;background:rgba(14,116,144,.05)}
+.cmp-chart{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px 32px;margin-top:24px;
+}
+.cmp-chart h4{font-size:16px;margin-bottom:6px}
+.cmp-chart .cap{font-size:12px;color:var(--gray);margin-bottom:26px}
+.bar-row{margin-bottom:22px}
+.bar-row:last-of-type{margin-bottom:0}
+.bar-row .lb{display:flex;justify-content:space-between;gap:14px;font-size:13px;margin-bottom:8px}
+.bar-row .lb .v{color:var(--teal);font-weight:800;white-space:nowrap}
+.bar{height:28px;background:var(--bg2);border-radius:7px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:7px;background:#b9c6cd}
+.bar i.on{background:linear-gradient(90deg,var(--teal),#17a2bf)}
+.cmp-chart .assume{
+  margin-top:24px;padding-top:18px;border-top:1px dashed var(--line);
+  font-size:12px;color:var(--gray);line-height:1.9;
+}
+@media(max-width:700px){.cmp-chart{padding:24px}}
+
 /* ---------- bridge ---------- */
 .bridge{
   margin-top:28px;background:var(--amber-l);border:1px solid #f5d491;
@@ -239,6 +265,7 @@ footer{background:#0a2027;color:#93a6b0;padding:40px 0;font-size:13px}
       <a href="#problem">お困りごと</a>
       <a href="#plan">月額プラン</a>
       <a href="#price">単発料金</a>
+      <a href="#compare">比較</a>
       <a href="#flow">ご利用の流れ</a>
       <a href="#faq">よくある質問</a>
     </nav>
@@ -323,7 +350,7 @@ footer{background:#0a2027;color:#93a6b0;padding:40px 0;font-size:13px}
     <div class="incl">
       <h4>すべてのプランに含まれるもの（台数が変わっても内容は同じです）</h4>
       <ul>
-        <li>出張オイル交換 <b>年2回</b><span>登録車両すべて。事業所まで伺います</span></li>
+        <li>出張オイル交換 <b>年3回</b><span>登録車両すべて。事業所まで伺います</span></li>
         <li>車両台帳の作成・管理<span>車検満了日・走行距離・整備履歴を記録</span></li>
         <li>車検・点検時期の事前お知らせ<span>期限が切れる前にこちらからご連絡します</span></li>
       </ul>
@@ -381,8 +408,60 @@ footer{background:#0a2027;color:#93a6b0;padding:40px 0;font-size:13px}
       <h4>定期的に使うなら、月額プランもご検討ください</h4>
       <p>
         単発は1回ごとのご依頼なので、日程調整も次回の時期の管理も事業所さまで行っていただくことになります。<br>
-        月額プランなら<b>オイル交換 年2回が込み</b>で、さらに車検満了日の管理、業者の手配、点検記録の保管まで引き受けます。
+        月額プランなら<b>オイル交換 年3回が込み</b>で、さらに車検満了日の管理、業者の手配、点検記録の保管まで引き受けます。
         車のことを気にかける時間そのものがなくなります。 → <a href="#plan">月額プランを見る</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 比較 ============ -->
+<section id="compare" class="sec-cmp">
+  <div class="wrap">
+    <div class="sec-head">
+      <span>COMPARISON</span>
+      <h2>持ち込みとの比較</h2>
+      <p>オイル交換の料金だけを見れば、持ち込みのほうが安く済みます。<br>差が出るのは、<b>その段取りを誰がやるか</b>です。</p>
+    </div>
+
+    <div class="tbl-wrap cmp">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>持ち込む場合<br><small>カー用品店・地場の修理工場</small></th>
+            <th>ケアカーサポート</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>オイル交換の料金（軽1台）</th><td>¥4,000〜4,500</td><td class="ok">月¥2,980〜<br>（年3回込み・月額プラン）</td></tr>
+          <tr><th>事業所からの持ち込み</th><td>必要</td><td class="ok">不要（出張します）</td></tr>
+          <tr><th>職員の立ち会い・待ち時間</th><td>30〜60分</td><td class="ok">ほぼゼロ</td></tr>
+          <tr><th>車検満了日の管理</th><td>事業所で管理</td><td class="ok">こちらが管理してお知らせ</td></tr>
+          <tr><th>業者の手配・日程調整</th><td>事業所で対応</td><td class="ok">代行します</td></tr>
+          <tr><th>点検記録の保管</th><td>なし（工場による）</td><td class="ok">台帳で保管・共有</td></tr>
+          <tr><th>車検・修理・板金の窓口</th><td>店舗ごとに対応が異なる</td><td class="ok">窓口を一本化</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cmp-chart">
+      <h4>車1台にかかる、職員の年間拘束時間</h4>
+      <p class="cap">持ち込み・待ち時間・業者とのやり取り・期限の確認を合計した試算です</p>
+
+      <div class="bar-row">
+        <div class="lb"><span>事業所で管理して持ち込む場合</span><span class="v">年 約8時間</span></div>
+        <div class="bar"><i style="width:100%"></i></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="lb"><span>ケアカーサポートに任せた場合</span><span class="v">年 約30分</span></div>
+        <div class="bar"><i class="on" style="width:6%"></i></div>
+      </div>
+
+      <p class="assume">
+        ※ 試算の前提：オイル交換 年3回（1回あたり往復と待ち時間で90分）、車検の手配・持ち込み・引き取り（年換算2時間）、業者探しや日程調整の連絡（年1.5時間）。車両1台あたりの目安です。<br>
+        ※ 台数が増えるほど、この差は台数分だけ大きくなります。
       </p>
     </div>
   </div>
@@ -453,6 +532,10 @@ footer{background:#0a2027;color:#93a6b0;padding:40px 0;font-size:13px}
       <details open>
         <summary>作業中、車は使えなくなりますか？</summary>
         <div class="a">オイル交換であれば1台あたり30分ほどです。送迎の空き時間に合わせて伺いますので、業務を止めずにご利用いただけます。</div>
+      </details>
+      <details>
+        <summary>オイル交換は年3回も必要ですか？</summary>
+        <div class="a">送迎車は短い距離の走行と停車をくり返すため、メーカーが「シビアコンディション」と呼ぶ、エンジンに負担のかかる使われ方にあたります。一般的な目安より早めの交換が推奨されるため、月額プランでは年3回を標準にしています。走行距離が少ない車両については、点検のうえでご相談します。</div>
       </details>
       <details>
         <summary>大きなディーゼル車も対応できますか？</summary>
