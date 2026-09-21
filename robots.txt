@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://care-car-jp.vercel.app/sitemap.xml
