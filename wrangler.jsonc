@@ -1,0 +1,17 @@
+// Cloudflare（Workers の静的サイト）で公開するための設定。
+// トーシロ大工ブログ・カタテマと同じアカウントに置く。公開URLは
+//   https://care-car-jp.tooshiro-blog.workers.dev
+// 公開（npx wrangler deploy）はオーナーの「公開して」をもらってから。手順は docs/cloudflare-migration.md
+{
+  "$schema": "../tooshiro-blog/node_modules/wrangler/config-schema.json",
+  "name": "care-car-jp",
+  "compatibility_date": "2026-09-18",
+  "assets": {
+    // public フォルダの中身だけを公開する（バックアップや説明書は外に置く）
+    "directory": "./public",
+    // /reserve と書いても reserve.html が開く（Vercel の cleanUrls と同じ動き）
+    "html_handling": "auto-trailing-slash",
+    // 存在しないページは 404 を返す
+    "not_found_handling": "none"
+  }
+}
