@@ -35,7 +35,11 @@ header{background:#fff;border-bottom:1px solid var(--line)}
 .head{background:linear-gradient(160deg,var(--teal),var(--teal-d));color:#fff;padding:44px 0 40px}
 .head h1{font-size:27px;line-height:1.5;margin-bottom:12px}
 .head p{font-size:14px;opacity:.92}
-@media(max-width:600px){.head h1{font-size:21px}}
+.head-line{
+  display:inline-block;margin-top:16px;background:#06c755;color:#fff;text-decoration:none;
+  padding:12px 24px;border-radius:999px;font-weight:700;font-size:15px;
+}
+@media(max-width:600px){.head h1{font-size:21px}.head{padding:30px 0 28px}}
 
 main{padding:36px 0 70px}
 .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px 32px;margin-bottom:20px}
@@ -54,7 +58,7 @@ label.lb i.opt{background:#9aa8b0}
 .hint{font-size:12px;color:var(--gray);margin-bottom:8px}
 input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea{
   width:100%;border:1px solid var(--line);border-radius:9px;padding:13px 14px;
-  font-size:15px;font-family:inherit;color:var(--ink);background:#fff;
+  font-size:16px;font-family:inherit;color:var(--ink);background:#fff;
 }
 input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);outline-offset:-1px;border-color:var(--teal)}
 textarea{min-height:110px;resize:vertical;line-height:1.7}
@@ -75,7 +79,7 @@ textarea{min-height:110px;resize:vertical;line-height:1.7}
 .car .nm{font-size:13px;font-weight:700;margin-bottom:10px}
 .stp{display:flex;align-items:center;justify-content:center;gap:12px}
 .stp button{
-  width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#fff;
   font-size:17px;color:var(--teal);cursor:pointer;line-height:1;font-family:inherit;
 }
 .stp button:hover{background:var(--teal-l);border-color:var(--teal)}
@@ -130,6 +134,7 @@ textarea{min-height:110px;resize:vertical;line-height:1.7}
   <div class="wrap">
     <h1>お申し込み・お問い合わせ</h1>
     <p>内容を確認のうえ、担当より折り返しご連絡いたします。<br>お急ぎの場合はLINEが最も早くつながります。</p>
+    <a href="https://lin.ee/QyshQN6" class="head-line" data-cta="line-reserve-top">入力せずにLINEで相談する</a>
   </div>
 </div>
 

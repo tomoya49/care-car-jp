@@ -8,7 +8,7 @@
 Cloudflareの無料プランには、Vercelのような「商用禁止」の条項は見当たらなかった。ただし規約の全文までは照合していない。
 
 **移し方（トーシロ大工ブログと同じ Cloudflare Workers の静的サイト方式。オーナーの「公開して」をもらってから行う）：**
-1. このフォルダに `wrangler.jsonc` を作り、`"name": "care-car-jp"` と `"assets": { "directory": "public" }` を書く。`index.html`・`reserve.html`・`ogp.png`・`robots.txt`・`sitemap.xml` は `public` フォルダにコピーする（バックアップの `*.bak*` は入れない）
+1. このフォルダに `wrangler.jsonc` を作り、`"name": "care-car-jp"` と `"assets": { "directory": "public" }` を書く。`index.html`・`reserve.html`・`ogp.png`・`qr-line.png`・`robots.txt`・`sitemap.xml` は `public` フォルダにコピーする（バックアップの `*.bak*` は入れない）
 2. `vercel.json` の設定を置き換える。「/reserve → reserve.html」は、wrangler.jsonc の `"assets"` に `"html_handling": "auto-trailing-slash"` を入れれば、拡張子なしの `/reserve` で開ける
 3. `npx wrangler deploy` で公開する。URLは `https://care-car-jp.<アカウント名>.workers.dev` になる（ブログと同じアカウント）
 4. URLが変わるので、`index.html` の canonical・og:url・og:image、`sitemap.xml`、`robots.txt` のURLを新しいものに書き換える。Search Console の確認タグは新しいURLで取り直す
