@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://care-car-jp.vercel.app/sitemap.xml
+Sitemap: https://care-car-jp.tooshiro-blog.workers.dev/sitemap.xml
