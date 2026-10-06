@@ -1,7 +1,5 @@
 {
-  "outputDirectory": "public",
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/reserve", "destination": "/reserve.html" }
+  "redirects": [
+    { "source": "/(.*)", "destination": "https://care-car-jp.tooshiro-blog.workers.dev/$1", "permanent": true }
   ]
 }
