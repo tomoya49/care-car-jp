@@ -268,6 +268,16 @@ textarea{min-height:110px;resize:vertical;line-height:1.7}
         </div>
 
         <div class="field">
+          <label class="lb" for="line">LINEでもご相談されましたか<i class="opt">任意</i></label>
+          <p class="hint">すでにLINEで連絡している場合は、お選びください。確認がスムーズになります。</p>
+          <select id="line" name="LINE相談済み">
+            <option value="">選択しない</option>
+            <option value="LINEでも相談済み">LINEでも相談済み</option>
+            <option value="LINEは使っていない">LINEは使っていない</option>
+          </select>
+        </div>
+
+        <div class="field">
           <label class="lb" for="notes">ご質問・ご要望<i class="opt">任意</i></label>
           <textarea id="notes" name="備考" placeholder="例）車検の時期が近い車両があります。あわせて相談したいです。"></textarea>
         </div>
@@ -351,6 +361,7 @@ document.getElementById('f').addEventListener('submit', async (ev) => {
   try {
     const fd = new FormData(document.getElementById('f'));
     fd.append('_subject', 'ケアカーサポート お申し込み／' + fd.get('事業所名'));
+    fd.append('経路', 'フォーム'); // 台帳で LINE・電話・訪問と区別するための印
 
     // フォームの内容をひとつのデータにまとめる
     const obj = {};
