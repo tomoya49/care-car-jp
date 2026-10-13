@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>手描き素材メーカー</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>✏</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>手描き素材メーカー</h1>
+    <p class="lead">画風は固定。描くものだけ入力すれば、手描きの仕上がりで出てきます。</p>
+
+    <form id="form">
+      <fieldset>
+        <legend>1. 画風</legend>
+        <div id="presets" class="presets"><p class="muted">読み込み中…</p></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. 何を描くか</legend>
+        <textarea id="subject" rows="3" maxlength="500" required
+          placeholder="例：車いすの利用者さんを福祉車両に乗せるスタッフ。秋の事業所の駐車場。"></textarea>
+        <p class="hint">日本語でOK。文字は入りません（文字はあとでデザインソフトで入れてください）。</p>
+      </fieldset>
+
+      <fieldset class="row">
+        <legend>3. 形と品質</legend>
+        <label>形
+          <select id="size">
+            <option value="1024x1024">正方形</option>
+            <option value="1536x1024">横長</option>
+            <option value="1024x1536">縦長</option>
+          </select>
+        </label>
+        <label>品質
+          <select id="quality">
+            <option value="low">下書き（安い）</option>
+            <option value="medium" selected>ふつう</option>
+            <option value="high">高品質（高い）</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. 合言葉</legend>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <label class="check"><input id="remember" type="checkbox"> この端末で覚える</label>
+      </fieldset>
+
+      <button id="go" type="submit">描く</button>
+      <p id="status" class="status" role="status"></p>
+    </form>
+
+    <section id="result" class="result" hidden>
+      <h2>できあがり</h2>
+      <canvas id="canvas"></canvas>
+      <div class="controls">
+        <label>手描き加工の強さ
+          <input id="strength" type="range" min="0" max="150" value="100">
+          <output id="strengthOut">100%</output>
+        </label>
+        <button id="reroll" type="button" class="sub">紙の質感を変える</button>
+        <label class="check"><input id="showOriginal" type="checkbox"> 加工前を見る</label>
+      </div>
+      <div class="controls">
+        <button id="download" type="button">保存（加工後）</button>
+        <button id="downloadOriginal" type="button" class="sub">保存（加工前）</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

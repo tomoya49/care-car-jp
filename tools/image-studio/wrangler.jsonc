@@ -1,0 +1,20 @@
+// 画像生成ツール（社内用）。LP（リポジトリ直下の wrangler.jsonc）とは別の Worker として公開する。
+// 公開URLの予定: https://care-car-image-studio.tooshiro-blog.workers.dev
+// 使い方・公開手順は README.md
+{
+  "$schema": "../../../tooshiro-blog/node_modules/wrangler/config-schema.json",
+  "name": "care-car-image-studio",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-18",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // /api/ だけはプログラム（src/worker.js）が受ける
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    // 使う画像モデル。差し替えたいときはここを書き換える
+    "OPENAI_IMAGE_MODEL": "gpt-image-2"
+  }
+  // OPENAI_API_KEY と APP_PASSWORD は秘密の値なので、ここには書かない（README.md 参照）
+}
