@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ステップ1：1枚の絵を描く</title>
+  <style>
+    body { margin: 0; background: #222; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    canvas { background: #fff; width: 100%; max-width: 640px; height: auto; }
+  </style>
+</head>
+<body>
+  <!-- canvas（キャンバス）＝ 絵を描くための「画用紙」。横640 × 縦360 の大きさ -->
+  <canvas id="screen" width="640" height="360"></canvas>
+
+  <script>
+    // ① 画用紙（canvas）と、絵筆（ctx）を用意する
+    const canvas = document.getElementById("screen");
+    const ctx = canvas.getContext("2d");
+
+    // ② 空を描く：fillStyle で色を選び、fillRect(x, y, 幅, 高さ) で四角を塗る
+    //    ※ 座標は「左上が (0, 0)」。右に行くほど x が増え、下に行くほど y が増える
+    ctx.fillStyle = "#8fd3ff";
+    ctx.fillRect(0, 0, 640, 360);
+
+    // ③ 地面を描く（y=290 から下を緑で塗る）
+    ctx.fillStyle = "#6cc56c";
+    ctx.fillRect(0, 290, 640, 70);
+
+    // ④ キャラクターを描く（x=320 が真ん中、y=290 が足元）
+    drawCharacter(320, 290);
+
+    // キャラクター「まるちゃん」を描く関数（＝描き方のレシピ）
+    function drawCharacter(x, y) {
+      // 体：arc(中心x, 中心y, 半径, 開始角度, 終了角度) で円を描く
+      ctx.fillStyle = "#ffcc66";
+      ctx.beginPath();
+      ctx.arc(x, y - 50, 50, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 目（黒い丸を2つ）
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(x - 18, y - 60, 6, 0, Math.PI * 2);
+      ctx.arc(x + 18, y - 60, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 口（半円の線＝にっこり）
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(x, y - 45, 12, 0.1 * Math.PI, 0.9 * Math.PI);
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>

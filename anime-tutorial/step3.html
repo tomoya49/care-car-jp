@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ステップ3：ミニアニメ「まるちゃんの一日」</title>
+  <style>
+    body { margin: 0; background: #222; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    canvas { background: #fff; width: 100%; max-width: 640px; height: auto; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <canvas id="screen" width="640" height="360"></canvas>
+
+  <script>
+    const canvas = document.getElementById("screen");
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width;
+    const H = canvas.height;
+    const GROUND = 290; // 地面の高さ
+
+    // ============================================================
+    //  台本（タイムライン）  ※ t = 始まってからの秒数
+    //   0〜4秒  ：まるちゃんが歩いてくる
+    //   4〜7秒  ：「こんにちは！」としゃべる
+    //   7〜10秒 ：うれしくてジャンプ
+    //   10〜13秒：日が沈んで夜になる
+    //   12秒〜  ：「おしまい」
+    //  画面をクリックすると最初から
+    // ============================================================
+
+    let startTime = null;
+
+    function frame(now) {
+      if (startTime === null) startTime = now;
+      const t = (now - startTime) / 1000; // ミリ秒 → 秒
+      drawScene(t);
+      requestAnimationFrame(frame);
+    }
+    canvas.addEventListener("click", () => { startTime = null; });
+    requestAnimationFrame(frame);
+
+    // 1コマ分の絵を描く（t秒目の場面）
+    function drawScene(t) {
+      const night = clamp01((t - 10) / 3); // 0 = 昼, 1 = 夜（10〜13秒で変化）
+
+      drawSky(night);
+      drawStars(night);
+      drawSun(night);
+      drawClouds(t, night);
+      drawGround(night);
+
+      // --- キャラの動きを台本どおりに決める ---
+      let x = W / 2;
+      let y = GROUND;
+      let walking = false;
+
+      if (t < 4) {
+        x = lerp(-60, W / 2, t / 4);                    // 左から真ん中へ
+        walking = true;
+        y = GROUND - Math.abs(Math.sin(t * Math.PI * 4)) * 6; // 歩くときの小さな上下
+      }
+      if (t >= 7 && t < 10) {
+        y = GROUND - Math.abs(Math.sin((t - 7) * Math.PI)) * 60; // 大ジャンプ×3回
+      }
+
+      const talking = t >= 4 && t < 7;
+      const blink = (t % 3) < 0.15;                         // 3秒ごとに一瞬まばたき
+      const mouthOpen = talking && Math.floor(t * 6) % 2 === 0; // 口パク
+      const legSwing = walking ? Math.sin(t * Math.PI * 8) : 0;
+
+      drawCharacter(x, y, { blink, mouthOpen, legSwing });
+
+      if (talking) drawBubble(x + 95, y - 150, "こんにちは！");
+      if (t >= 7 && t < 10) drawBubble(x + 95, y - 150, "わーい！");
+
+      // --- おしまい ---
+      if (t >= 12) {
+        ctx.globalAlpha = clamp01(t - 12); // 1秒かけてふわっと表示
+        ctx.fillStyle = "#fff";
+        ctx.shadowColor = "rgba(0,0,0,0.6)"; // 文字に影をつけて読みやすく
+        ctx.shadowBlur = 6;
+        ctx.textAlign = "center";
+        ctx.font = "bold 40px sans-serif";
+        ctx.fillText("おしまい", W / 2, 90);
+        ctx.font = "16px sans-serif";
+        ctx.fillText("クリックでもう一回", W / 2, 120);
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // ---------------- 背景のパーツ ----------------
+
+    function drawSky(night) {
+      const g = ctx.createLinearGradient(0, 0, 0, GROUND); // 上から下へのグラデーション
+      g.addColorStop(0, mixColor([143, 211, 255], [11, 26, 58], night));
+      g.addColorStop(1, mixColor([216, 241, 255], [90, 60, 110], night));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    const STARS = [[60,40],[150,90],[230,30],[320,70],[410,25],[480,100],[560,50],[600,130],[100,150],[380,140]];
+    function drawStars(night) {
+      ctx.fillStyle = `rgba(255,255,255,${night})`; // 夜になるほど見える
+      for (const [sx, sy] of STARS) {
+        ctx.beginPath();
+        ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawSun(night) {
+      const sunY = lerp(70, 340, night); // 夜に向かって沈む
+      ctx.fillStyle = mixColor([255, 220, 80], [255, 120, 60], night);
+      ctx.beginPath();
+      ctx.arc(540, sunY, 35, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawClouds(t, night) {
+      const c = Math.round(lerp(255, 120, night)); // 夜は雲も暗く
+      ctx.fillStyle = `rgba(${c},${c},${c + 20},${0.9 - night * 0.5})`;
+      const clouds = [[0, 60, 20], [300, 110, 12], [500, 40, 16]]; // [最初のx, y, 速さ]
+      for (const [baseX, cy, speed] of clouds) {
+        const cx = ((baseX + t * speed) % (W + 200)) - 100; // 右に流れて、端まで行ったら戻る
+        ctx.beginPath();
+        ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+        ctx.arc(cx + 25, cy - 10, 28, 0, Math.PI * 2);
+        ctx.arc(cx + 55, cy, 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawGround(night) {
+      ctx.fillStyle = mixColor([108, 197, 108], [30, 70, 50], night);
+      ctx.fillRect(0, GROUND, W, H - GROUND);
+    }
+
+    // ---------------- キャラクター ----------------
+
+    function drawCharacter(x, y, { blink, mouthOpen, legSwing }) {
+      // 足（左右を逆向きに振ると歩いて見える）
+      ctx.fillStyle = "#e0a040";
+      ctx.beginPath();
+      ctx.ellipse(x - 20 + legSwing * 8, y - 4, 14, 8, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 20 - legSwing * 8, y - 4, 14, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 体
+      ctx.fillStyle = "#ffcc66";
+      ctx.beginPath();
+      ctx.arc(x, y - 50, 50, 0, Math.PI * 2);
+      ctx.fill();
+
+      // ほっぺ
+      ctx.fillStyle = "rgba(255,120,120,0.6)";
+      ctx.beginPath();
+      ctx.ellipse(x - 32, y - 42, 9, 6, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 32, y - 42, 9, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 目
+      ctx.strokeStyle = "#000";
+      ctx.fillStyle = "#000";
+      ctx.lineWidth = 3;
+      if (blink) {
+        // まばたき中は横線
+        ctx.beginPath();
+        ctx.moveTo(x - 25, y - 60); ctx.lineTo(x - 11, y - 60);
+        ctx.moveTo(x + 11, y - 60); ctx.lineTo(x + 25, y - 60);
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(x - 18, y - 60, 6, 0, Math.PI * 2);
+        ctx.arc(x + 18, y - 60, 6, 0, Math.PI * 2);
+        ctx.fill();
+        // 目のキラッ（白い点）
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(x - 16, y - 62, 2, 0, Math.PI * 2);
+        ctx.arc(x + 20, y - 62, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 口
+      if (mouthOpen) {
+        ctx.fillStyle = "#a33";
+        ctx.beginPath();
+        ctx.ellipse(x, y - 38, 8, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(x, y - 45, 12, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.stroke();
+      }
+    }
+
+    // ふきだし
+    function drawBubble(bx, by, text) {
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(bx, by, 80, 30, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      // しっぽ
+      ctx.beginPath();
+      ctx.moveTo(bx - 50, by + 20);
+      ctx.lineTo(bx - 75, by + 50);
+      ctx.lineTo(bx - 30, by + 26);
+      ctx.fill();
+      ctx.fillStyle = "#333";
+      ctx.font = "bold 20px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, bx, by);
+      ctx.textBaseline = "alphabetic";
+    }
+
+    // ---------------- 便利な道具 ----------------
+
+    // a から b へ、t（0〜1）の割合だけ進んだ値
+    function lerp(a, b, t) { return a + (b - a) * clamp01(t); }
+    // 値を 0〜1 の範囲におさめる
+    function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+    // 2つの色を t の割合で混ぜる
+    function mixColor(c1, c2, t) {
+      const r = Math.round(lerp(c1[0], c2[0], t));
+      const g = Math.round(lerp(c1[1], c2[1], t));
+      const b = Math.round(lerp(c1[2], c2[2], t));
+      return `rgb(${r},${g},${b})`;
+    }
+  </script>
+</body>
+</html>
