@@ -48,32 +48,94 @@ async function loadPresets() {
 }
 loadPresets().catch(() => setStatus("画風の一覧が読み込めませんでした。再読み込みしてください。", true));
 
-// ---- 生成 ----
+// ---- 作り方の切り替え ----
+const mode = () => form.mode.value;
+const apiNeeded = () => mode() === "new" || $("redrawAi").checked;
+function updateMode() {
+  const upload = mode() === "upload";
+  document.querySelectorAll('[data-mode="upload"]').forEach((el) => (el.hidden = !upload));
+  document.querySelectorAll('[data-need="api"]').forEach((el) => (el.hidden = !apiNeeded()));
+  // 加工だけのときは入力文を使わない。描き直しのときは任意の補足として使う
+  $("subject").closest("fieldset").hidden = upload && !$("redrawAi").checked;
+  $("subjectLegend").textContent = upload ? "2-2. 補足（任意）" : "2. 何を描くか";
+  $("subject").placeholder = upload
+    ? "例：人物の顔はもっと簡単に。背景は省略して。"
+    : "例：車いすの利用者さんを福祉車両に乗せるスタッフ。秋の事業所の駐車場。";
+  $("go").textContent = !upload ? "描く" : apiNeeded() ? "描き直して加工する" : "加工する";
+}
+form.addEventListener("change", (e) => {
+  if (e.target.name === "mode" || e.target.id === "redrawAi") updateMode();
+});
+updateMode();
+
+// 選んだ画像を読み込み、長い辺を最大1536pxに縮める
+let uploaded = null; // { img, dataUrl }
+$("file").addEventListener("change", async () => {
+  uploaded = null;
+  const file = $("file").files[0];
+  if (!file) return;
+  try {
+    const url = URL.createObjectURL(file);
+    const src = await loadImage(url);
+    URL.revokeObjectURL(url);
+    const scale = Math.min(1, 1536 / Math.max(src.naturalWidth, src.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.round(src.naturalWidth * scale);
+    c.height = Math.round(src.naturalHeight * scale);
+    const cx = c.getContext("2d");
+    cx.fillStyle = "#fff"; // 透明部分は白にする
+    cx.fillRect(0, 0, c.width, c.height);
+    cx.drawImage(src, 0, 0, c.width, c.height);
+    const dataUrl = c.toDataURL("image/jpeg", 0.92);
+    uploaded = { img: await loadImage(dataUrl), dataUrl };
+    // 形は元の画像の縦横比に近いものを選んでおく
+    const ratio = c.width / c.height;
+    $("size").value = ratio > 1.2 ? "1536x1024" : ratio < 0.83 ? "1024x1536" : "1024x1024";
+    setStatus("");
+  } catch (err) {
+    setStatus(err.message, true);
+  }
+});
+
+// ---- 生成・加工 ----
+async function callApi(path, payload) {
+  const res = await fetch(path, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      password: $("password").value,
+      size: $("size").value,
+      quality: $("quality").value,
+      subject: $("subject").value,
+      ...payload,
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `エラー（${res.status}）`);
+  return `data:${data.mime};base64,${data.image}`;
+}
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const presetId = form.preset?.value;
   const preset = presets.find((p) => p.id === presetId);
   if (!preset) return setStatus("画風を選んでください。", true);
-  rememberPassword();
+  if (mode() === "new" && !$("subject").value.trim()) return setStatus("何を描くかを入力してください。", true);
+  if (mode() === "upload" && !uploaded) return setStatus("画像を選んでください。", true);
+  if (apiNeeded() && !$("password").value) return setStatus("合言葉を入れてください。", true);
+  if (apiNeeded()) rememberPassword();
 
   $("go").disabled = true;
-  setStatus("描いています…（30秒〜1分ほどかかります）");
   try {
-    const res = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        password: $("password").value,
-        preset: presetId,
-        subject: $("subject").value,
-        size: $("size").value,
-        quality: $("quality").value,
-      }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `エラー（${res.status}）`);
-
-    originalUrl = `data:${data.mime};base64,${data.image}`;
+    if (mode() === "new") {
+      setStatus("描いています…（30秒〜1分ほどかかります）");
+      originalUrl = await callApi("/api/generate", { preset: presetId });
+    } else if (apiNeeded()) {
+      setStatus("手描きに描き直しています…（30秒〜1分ほどかかります）");
+      originalUrl = await callApi("/api/redraw", { preset: presetId, image: uploaded.dataUrl });
+    } else {
+      originalUrl = uploaded.dataUrl;
+    }
     original = await loadImage(originalUrl);
     finish = preset.finish;
     seed = (Math.random() * 2 ** 31) | 0;

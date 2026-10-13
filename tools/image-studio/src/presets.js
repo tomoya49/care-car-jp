@@ -25,10 +25,11 @@ const COMMON_AVOID = [
 const COMMON_STYLE = [
   "made by a human illustrator by hand, not digital painting",
   "slightly imperfect proportions and naturally uneven lines",
-  "simple, relaxed composition with generous empty space",
   "limited color palette",
-  "plain background",
 ];
+
+// 新しく描くときだけ入れる構図の指示（描き直しは元の構図を残すので入れない）
+const NEW_LAYOUT = ["simple, relaxed composition with generous empty space", "plain background"];
 
 export const PRESETS = [
   {
@@ -115,7 +116,7 @@ export function findPreset(id) {
 
 // プリセットと「何を描くか」から、生成用の指示文を組み立てる
 export function buildPrompt(preset, subject) {
-  const style = [...preset.style, ...COMMON_STYLE];
+  const style = [...preset.style, ...COMMON_STYLE, ...NEW_LAYOUT];
   const avoid = [...preset.avoid, ...COMMON_AVOID];
   return [
     `Subject: ${subject}`,
@@ -126,6 +127,26 @@ export function buildPrompt(preset, subject) {
     "",
     "If the subject asks for written words, leave blank space for them instead of drawing letters.",
   ].join("\n");
+}
+
+// 手持ちの画像を、構図と中身はそのままに手描きで描き直させるための指示文
+export function buildRedrawPrompt(preset, note) {
+  const style = [...preset.style, ...COMMON_STYLE];
+  const avoid = [...preset.avoid, ...COMMON_AVOID];
+  return [
+    "Redraw this image by hand as an illustration.",
+    "Keep the same subject, layout, poses and colors roughly the same, but redraw everything in the style below.",
+    "Simplify details the way a human illustrator would; do not trace photographic detail.",
+    note ? `Notes: ${note}` : "",
+    "",
+    `Style: ${style.join("; ")}.`,
+    "",
+    `Do NOT include: ${avoid.join("; ")}.`,
+    "",
+    "Remove any text or letters from the original image and leave that area plain.",
+  ]
+    .filter((line, i, all) => line !== "" || all[i - 1] !== "")
+    .join("\n");
 }
 
 // 画面に渡す分（指示文の中身は渡さない）

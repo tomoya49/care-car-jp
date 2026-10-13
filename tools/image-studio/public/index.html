@@ -15,18 +15,36 @@
 
     <form id="form">
       <fieldset>
+        <legend>作り方</legend>
+        <div class="modes">
+          <label class="preset"><input type="radio" name="mode" value="new" checked>
+            <b>新しく描く</b><span>文章から手描きの絵を作る</span></label>
+          <label class="preset"><input type="radio" name="mode" value="upload">
+            <b>手持ちの画像を加工</b><span>ChatGPT・Canvaなどで作った画像を手描き風にする</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
         <legend>1. 画風</legend>
         <div id="presets" class="presets"><p class="muted">読み込み中…</p></div>
       </fieldset>
 
-      <fieldset>
-        <legend>2. 何を描くか</legend>
-        <textarea id="subject" rows="3" maxlength="500" required
+      <fieldset data-mode="upload" hidden>
+        <legend>2. 画像</legend>
+        <input id="file" type="file" accept="image/png,image/jpeg,image/webp">
+        <label class="check"><input id="redrawAi" type="checkbox" checked> AIで手描きに描き直してから加工する（有料・おすすめ）</label>
+        <p class="hint">外すと、加工（線の揺れ・紙・粒子など）だけをこの端末でかけます（無料・合言葉不要）。<br>
+          元の画像がAIっぽいほど、描き直しをしたほうが自然になります。</p>
+      </fieldset>
+
+      <fieldset data-need="subject">
+        <legend id="subjectLegend">2. 何を描くか</legend>
+        <textarea id="subject" rows="3" maxlength="500"
           placeholder="例：車いすの利用者さんを福祉車両に乗せるスタッフ。秋の事業所の駐車場。"></textarea>
         <p class="hint">日本語でOK。文字は入りません（文字はあとでデザインソフトで入れてください）。</p>
       </fieldset>
 
-      <fieldset class="row">
+      <fieldset class="row" data-need="api">
         <legend>3. 形と品質</legend>
         <label>形
           <select id="size">
@@ -44,9 +62,9 @@
         </label>
       </fieldset>
 
-      <fieldset>
+      <fieldset data-need="api">
         <legend>4. 合言葉</legend>
-        <input id="password" type="password" autocomplete="current-password" required>
+        <input id="password" type="password" autocomplete="current-password">
         <label class="check"><input id="remember" type="checkbox"> この端末で覚える</label>
       </fieldset>
 
