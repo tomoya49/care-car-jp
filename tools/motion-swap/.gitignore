@@ -1,0 +1,12 @@
+__pycache__/
+*.egg-info/
+.venv/
+*_work/
+*.mp4
+*.mov
+*.jpg
+*.jpeg
+*.png
+consent*.json
+!consent.example.json
+*.pdf

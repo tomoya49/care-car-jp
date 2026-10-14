@@ -11,3 +11,7 @@ Cloudflareの無料プランには、Vercelのような「商用禁止」の条�
 
 - 公開するファイルは `public/` の中だけ（バックアップの `*.bak*` は外に置いてあるので公開されない）
 - 新URL：`https://care-car-jp.tooshiro-blog.workers.dev`（ブログ・カタテマと同じアカウント）
+
+## tools/motion-swap
+
+LP・広告動画用の、動画の人物の顔・体つきを置き換えるツール（同意済みの素材専用・自分のPCのGPUで動かす）。LPの公開物ではない（公開されるのは `public/` だけ）。使い方は `tools/motion-swap/README.md`。
