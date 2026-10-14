@@ -47,7 +47,7 @@ npm run dev   # http://localhost:3000
 - フォーム → `POST /api/register`（`app/api/register/route.ts`）→ Supabase の `pre_registrations` に INSERT
 - 入力検証は zod（`lib/registration.ts`）
 - 同じメールアドレスは一意制約で弾き、画面には「登録済みです」と表示（エラーにはしない）。メールは小文字にそろえて保存
-- スパム対策：ハニーポット項目（`website`）、同一IPから1分に6回以上の送信を拒否（`lib/rate-limit.ts`、メモリ内の簡易版）、他サイトからの送信を拒否
+- スパム対策：ハニーポット項目（`hp_b7f3e`。自動入力に反応しない名前にしている）、同一IPから1分に6回以上の送信を拒否（`lib/rate-limit.ts`、メモリ内の簡易版）、他サイトからの送信を拒否
 - URL の `utm_source` / `utm_medium` / `utm_campaign` と外部の参照元URLを一緒に保存
   - 例：`https://（公開URL）/?utm_source=instagram&utm_medium=social&utm_campaign=launch`
 - 取得するのはフォームの項目だけ。氏名・位置情報・IPアドレスは保存しません

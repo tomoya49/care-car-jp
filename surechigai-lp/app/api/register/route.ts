@@ -30,7 +30,10 @@ export async function POST(req: NextRequest) {
   const data = parsed.data;
 
   // ハニーポットに入力があればボット。保存せず、成功したように見せる
-  if (data.website) return json({ status: "created" });
+  if (data.hp) {
+    console.warn("honeypot hit: registration discarded");
+    return json({ status: "created" });
+  }
 
   const { error } = await getSupabase()
     .from("pre_registrations")

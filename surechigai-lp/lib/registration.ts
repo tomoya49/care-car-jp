@@ -27,7 +27,7 @@ export const registrationSchema = z.object({
   agreeAge: z.literal(true),
   agreePrivacy: z.literal(true),
   // ハニーポット：人間には見えない項目。値が入っていたらボットとみなす
-  website: z.string().max(200).optional(),
+  hp: z.string().max(200).optional(),
   utmSource: tracking,
   utmMedium: tracking,
   utmCampaign: tracking,

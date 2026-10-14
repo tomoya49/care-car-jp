@@ -67,7 +67,7 @@ export default function RegisterForm() {
           area: fd.get("area") ?? "",
           agreeAge: fd.get("agreeAge") === "on",
           agreePrivacy: fd.get("agreePrivacy") === "on",
-          website: fd.get("website") ?? "",
+          hp: fd.get("hp_b7f3e") ?? "",
           ...readTracking(),
         }),
       });
@@ -200,10 +200,8 @@ export default function RegisterForm() {
 
       {/* ハニーポット：画面にもスクリーンリーダーにも出さない */}
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label>
-          Website
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-        </label>
+        {/* 名前に website / email などを使うとブラウザの自動入力で値が入り、本物の登録が捨てられるので意味のない名前にする */}
+        <input type="text" name="hp_b7f3e" tabIndex={-1} autoComplete="off" defaultValue="" />
       </div>
 
       <div className="space-y-2">
