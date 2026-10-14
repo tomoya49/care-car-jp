@@ -7,6 +7,8 @@ const canvas = $("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
 let presets = [];
+let engine = "cloudflare";
+let maxInputSide = 511; // 描き直しに送る元画像の長い辺の上限（サーバーが教えてくれる）
 let original = null; // 加工前の画像（Image）
 let originalUrl = "";
 let finish = null; // 生成時のプリセットの加工設定
@@ -36,7 +38,12 @@ function rememberPassword() {
 // ---- 画風の一覧 ----
 async function loadPresets() {
   const res = await fetch("/api/presets");
-  ({ presets } = await res.json());
+  ({ presets, engine, maxInputSide } = await res.json());
+  // 無料エンジンには品質の選択がない
+  $("quality").closest("label").hidden = engine === "cloudflare";
+  document.querySelectorAll("[data-cost]").forEach((el) => {
+    el.textContent = engine === "cloudflare" ? "無料枠" : "有料";
+  });
   $("presets").innerHTML = presets
     .map(
       (p, i) => `<label class="preset">
@@ -68,8 +75,21 @@ form.addEventListener("change", (e) => {
 });
 updateMode();
 
-// 選んだ画像を読み込み、長い辺を最大1536pxに縮める
-let uploaded = null; // { img, dataUrl }
+// 画像を、長い辺が maxSide 以下になるよう縮めて JPEG の data URL にする
+function shrink(src, maxSide) {
+  const scale = Math.min(1, maxSide / Math.max(src.naturalWidth, src.naturalHeight));
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round(src.naturalWidth * scale));
+  c.height = Math.max(1, Math.round(src.naturalHeight * scale));
+  const cx = c.getContext("2d");
+  cx.fillStyle = "#fff"; // 透明部分は白にする
+  cx.fillRect(0, 0, c.width, c.height);
+  cx.drawImage(src, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.92);
+}
+
+// 選んだ画像を読み込む。加工だけなら最大1536px、描き直しに送るのはサーバーの上限まで縮めたもの
+let uploaded = null; // { src, dataUrl }
 $("file").addEventListener("change", async () => {
   uploaded = null;
   const file = $("file").files[0];
@@ -78,18 +98,9 @@ $("file").addEventListener("change", async () => {
     const url = URL.createObjectURL(file);
     const src = await loadImage(url);
     URL.revokeObjectURL(url);
-    const scale = Math.min(1, 1536 / Math.max(src.naturalWidth, src.naturalHeight));
-    const c = document.createElement("canvas");
-    c.width = Math.round(src.naturalWidth * scale);
-    c.height = Math.round(src.naturalHeight * scale);
-    const cx = c.getContext("2d");
-    cx.fillStyle = "#fff"; // 透明部分は白にする
-    cx.fillRect(0, 0, c.width, c.height);
-    cx.drawImage(src, 0, 0, c.width, c.height);
-    const dataUrl = c.toDataURL("image/jpeg", 0.92);
-    uploaded = { img: await loadImage(dataUrl), dataUrl };
+    uploaded = { src, dataUrl: shrink(src, 1536) };
     // 形は元の画像の縦横比に近いものを選んでおく
-    const ratio = c.width / c.height;
+    const ratio = src.naturalWidth / src.naturalHeight;
     $("size").value = ratio > 1.2 ? "1536x1024" : ratio < 0.83 ? "1024x1536" : "1024x1024";
     setStatus("");
   } catch (err) {
@@ -132,7 +143,10 @@ form.addEventListener("submit", async (e) => {
       originalUrl = await callApi("/api/generate", { preset: presetId });
     } else if (apiNeeded()) {
       setStatus("手描きに描き直しています…（30秒〜1分ほどかかります）");
-      originalUrl = await callApi("/api/redraw", { preset: presetId, image: uploaded.dataUrl });
+      originalUrl = await callApi("/api/redraw", {
+        preset: presetId,
+        image: shrink(uploaded.src, maxInputSide),
+      });
     } else {
       originalUrl = uploaded.dataUrl;
     }

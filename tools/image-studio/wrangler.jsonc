@@ -12,9 +12,13 @@
     // /api/ だけはプログラム（src/worker.js）が受ける
     "run_worker_first": ["/api/*"]
   },
+  // Cloudflare Workers AI（無料枠: 1日 10,000 Neurons。日本時間の朝9時に戻る）
+  "ai": { "binding": "AI" },
   "vars": {
-    // 使う画像モデル。差し替えたいときはここを書き換える
+    // 生成エンジン: "cloudflare"（無料枠）または "openai"（有料・OPENAI_API_KEY が必要）
+    "IMAGE_ENGINE": "cloudflare",
+    // openai のときに使う画像モデル
     "OPENAI_IMAGE_MODEL": "gpt-image-2"
   }
-  // OPENAI_API_KEY と APP_PASSWORD は秘密の値なので、ここには書かない（README.md 参照）
+  // APP_PASSWORD（と openai のときの OPENAI_API_KEY）は秘密の値なので、ここには書かない（README.md 参照）
 }

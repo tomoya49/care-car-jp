@@ -7,8 +7,8 @@ LP（`public/`）とは別の Worker として公開するので、LPには影�
 
 | 作り方 | やること | 料金 | 合言葉 |
 |---|---|---|---|
-| 新しく描く | 文章から、選んだ画風で描かせて加工する | かかる | 必要 |
-| 手持ちの画像を加工 → 描き直しあり（おすすめ） | ChatGPT・Canvaなどで作った画像を、AIに選んだ画風で描き直させてから加工する。構図や中身は元の画像のまま | かかる | 必要 |
+| 新しく描く | 文章から、選んだ画風で描かせて加工する | 無料枠（初期設定） | 必要 |
+| 手持ちの画像を加工 → 描き直しあり（おすすめ） | ChatGPT・Canvaなどで作った画像を、AIに選んだ画風で描き直させてから加工する。構図や中身は元の画像のまま | 無料枠（初期設定） | 必要 |
 | 手持ちの画像を加工 → 加工だけ | 線の揺れ・紙・粒子などの加工だけをこの端末でかける | 無料 | 不要 |
 
 元の画像がつるつるのAIっぽい絵や写真だと、加工だけでは限界がある。その場合は「描き直しあり」を使う。
@@ -25,17 +25,28 @@ LP（`public/`）とは別の Worker として公開するので、LPには影�
 
 画風を足したい・変えたいときは `src/presets.js` に1件追加するだけでよい。
 
-## 使う画像モデル
+## 使う画像モデル（初期設定は無料）
 
-OpenAI の画像API（`wrangler.jsonc` の `OPENAI_IMAGE_MODEL`、初期値 `gpt-image-2`）。
-料金は1枚ごと。品質「下書き」がいちばん安く、「高品質」がいちばん高い。最新の料金はOpenAIの料金ページで確認する。
+`wrangler.jsonc` の `IMAGE_ENGINE` で切り替える。
+
+| IMAGE_ENGINE | モデル | 料金 | 必要なもの |
+|---|---|---|---|
+| `cloudflare`（初期設定） | Cloudflare Workers AI の FLUX.2 [klein] 4B | **1日の無料枠の中なら無料**。無料プランのままなら、枠を超えても請求されず「今日は終わり」になるだけ | いま使っているCloudflareのアカウントだけ（APIキー・カード不要） |
+| `openai` | OpenAI の画像API（`OPENAI_IMAGE_MODEL`） | 1枚ごとに有料 | OpenAIのAPIキー（`OPENAI_API_KEY`）と前払いチャージ |
+
+- 無料枠は1日 10,000 Neurons（アカウント全体で共有）。毎日 日本時間の朝9時に戻る。
+- 料金表から計算すると、正方形1枚あたり約100 Neurons なので、**1日およそ90枚前後**（横長・縦長は約60枚）。料金表は変わることがあるので目安。
+- 同じCloudflareアカウントで他にWorkers AIを使っていると、その分減る。
+- 描き直しに送る元画像は、モデルの決まりで 512px 未満に縮めて送る（画面が自動でやる）。細かいところは描き直しで簡略化される。
+- 無料モデルで仕上がりが物足りないときは、有料（openai）に切り替えて比べてみる。
 
 ## 手元で動かす
 
 ```sh
 cd tools/image-studio
-# 秘密の値をファイルに書く（.dev.vars は git に入らない）
-printf 'OPENAI_API_KEY=sk-...\nAPP_PASSWORD=好きな合言葉\n' > .dev.vars
+# 合言葉をファイルに書く（.dev.vars は git に入らない）
+printf 'APP_PASSWORD=好きな合言葉\n' > .dev.vars
+npx wrangler login   # 初回だけ。Workers AI は手元でもCloudflare上で動くのでログインが要る
 npx wrangler dev
 ```
 
@@ -43,12 +54,11 @@ npx wrangler dev
 
 ```sh
 cd tools/image-studio
-npx wrangler secret put OPENAI_API_KEY   # OpenAIのAPIキーを貼る
 npx wrangler secret put APP_PASSWORD     # 画面で入れる合言葉を決めて貼る
 npx wrangler deploy
 ```
 
 - 公開URLは `https://care-car-image-studio.tooshiro-blog.workers.dev` になる予定
-- 合言葉を知らない人は生成できない（APIの料金を他人に使われないため）
+- 合言葉を知らない人は生成できない（無料枠を他人に使い切られないため）
 - 検索エンジンには載せない設定（`noindex`）にしてある
-- OpenAI 側で月の利用上限（Usage limits）を設定しておくと、使いすぎを防げる
+- 有料（openai）に切り替えるときは、`IMAGE_ENGINE` を `"openai"` にして `npx wrangler secret put OPENAI_API_KEY` も行う
