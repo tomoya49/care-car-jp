@@ -72,7 +72,7 @@ printf '%s\n' "${TORCH_PKGS[@]}" > "$WAN_DIR/.constraints.txt"
 # flash_attn は組み立て済み版を、SAM 2 は手元の PyTorch で組み立てるので、ここでは外す
 grep -v '^flash_attn' "$WAN_DIR/requirements.txt" > "$WAN_DIR/.requirements-1.txt"
 grep -v 'sam2' "$WAN_DIR/requirements_animate.txt" > "$WAN_DIR/.requirements-2.txt"
-sam2_req="$(grep 'sam2' "$WAN_DIR/requirements_animate.txt" | sed 's/^-e *//')"
+sam2_req="$(grep 'sam2' "$WAN_DIR/requirements_animate.txt" | sed 's/^-e *//; s/[[:space:]]*$//')"
 "$PY" -m pip install -c "$WAN_DIR/.constraints.txt" \
   -r "$WAN_DIR/.requirements-1.txt" -r "$WAN_DIR/.requirements-2.txt"
 
