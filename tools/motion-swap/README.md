@@ -43,15 +43,16 @@ git clone https://github.com/tomoya49/care-car-jp.git ~/care-car-jp
 bash ~/care-car-jp/tools/motion-swap/setup_wsl.sh
 ```
 
-`setup_wsl.sh` は次の7つを順に行います。
+`setup_wsl.sh` は次の8つを順に行います。
 
 1. GPU の確認
 2. 必要な道具を入れる
 3. Wan2.2 本体を入れる（動作を確かめた版に固定）
-4. Python の部品を入れる（PyTorch 2.8 / CUDA 12.8）
-5. flash_attn の組み立て済み版を入れる
-6. 重み（数十GB）をダウンロードする
-7. 設定を `~/.bashrc` に保存する
+4. CUDA ツールキット 12.8 を入れる（約3GB。SAM 2 の組み立てに必要）
+5. Python の部品を入れる（PyTorch 2.8 / CUDA 12.8）
+6. SAM 2 をこの PC の GPU 向けに組み立て、flash_attn の組み立て済み版を入れる
+7. 重み（数十GB）をダウンロードする
+8. 設定を `~/.bashrc` に保存する
 
 - 何度実行しても大丈夫です。重みのダウンロードは、途中で止まっても続きから入ります
 - 最後に、準備がそろっているかの確認（`motion-swap doctor`）が自動で走ります

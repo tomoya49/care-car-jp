@@ -39,7 +39,7 @@ try:
     r["flash_attn"] = flash_attn.__version__
 except Exception as e:
     r["flash_attn_error"] = repr(e)
-for mod in ["wan", "sam2", "decord", "onnxruntime"]:
+for mod in ["wan", "sam2", "decord", "onnxruntime", "moviepy"]:
     r["mod_" + mod] = importlib.util.find_spec(mod) is not None
 try:
     from sam2 import _C  # 人物マスクの穴埋めに使う GPU 用の部品（組み立てが必要）
@@ -109,7 +109,8 @@ def run_checks(repo: Path | None, ckpt: Path | None, python: str, probe: dict | 
                         "" if fa else p.get("flash_attn_error", "") + " → setup_wsl.sh をもう一度実行してください"))
 
     for mod, name in [("wan", "Wan2.2 のコード"), ("sam2", "SAM 2（人物の切り抜き）"),
-                      ("decord", "decord（動画読み込み）"), ("onnxruntime", "onnxruntime（骨格の抽出）")]:
+                      ("decord", "decord（動画読み込み）"), ("onnxruntime", "onnxruntime（骨格の抽出）"),
+                      ("moviepy", "moviepy（前処理の動画書き出し）")]:
         ok = p.get("mod_" + mod, False)
         checks.append(Check(ok, name, "" if ok else "setup_wsl.sh をもう一度実行してください"))
     if p.get("mod_sam2"):

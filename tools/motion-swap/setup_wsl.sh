@@ -75,6 +75,8 @@ grep -v 'sam2' "$WAN_DIR/requirements_animate.txt" > "$WAN_DIR/.requirements-2.t
 sam2_req="$(grep 'sam2' "$WAN_DIR/requirements_animate.txt" | sed 's/^-e *//; s/[[:space:]]*$//')"
 "$PY" -m pip install -c "$WAN_DIR/.constraints.txt" \
   -r "$WAN_DIR/.requirements-1.txt" -r "$WAN_DIR/.requirements-2.txt"
+# 前処理（process_pipepline.py）が使うのに requirements に書かれていない部品
+"$PY" -m pip install -c "$WAN_DIR/.constraints.txt" moviepy==2.2.1
 
 step "6/8 SAM 2（人物の切り抜き）と flash_attn（Wan2.2-Animate に必須）"
 if "$PY" -c "from sam2 import _C" 2>/dev/null; then

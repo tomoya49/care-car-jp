@@ -4,7 +4,7 @@ from motion_swap import doctor
 
 GOOD_PROBE = {
     "torch": "2.8.0+cu128", "cuda": True, "gpu": "NVIDIA GeForce RTX 4090", "vram_gb": 24.0,
-    "flash_attn": "2.8.3", "sam2_C": True, "mod_wan": True, "mod_sam2": True, "mod_decord": True, "mod_onnxruntime": True,
+    "flash_attn": "2.8.3", "sam2_C": True, "mod_wan": True, "mod_sam2": True, "mod_decord": True, "mod_onnxruntime": True, "mod_moviepy": True,
 }
 
 
