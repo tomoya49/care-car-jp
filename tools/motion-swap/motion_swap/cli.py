@@ -5,7 +5,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import __version__
+from . import __version__, doctor
 from .consent import ConsentError, load_consent
 from .media import MediaError
 from .pipeline import run
@@ -25,7 +25,8 @@ def _resolution(value: str) -> tuple[int, int]:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="motion-swap",
-        description="動画の人物の動きはそのままに、顔・体つきを写真の人物へ置き換える（同意済みの素材専用）",
+        description="動画の人物の動きはそのままに、顔・体つきを写真の人物へ置き換える（同意済みの素材専用）。"
+                    "準備の確認は `motion-swap doctor`",
     )
     p.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     p.add_argument("--video", type=Path, required=True, help="元動画（動きを使う）")
@@ -49,7 +50,19 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def _doctor(argv: list[str]) -> int:
+    p = argparse.ArgumentParser(prog="motion-swap doctor", description="動かす前に、必要なものがそろっているか確かめる")
+    p.add_argument("--wan-repo", type=Path, default=os.environ.get("WAN_REPO"))
+    p.add_argument("--ckpt", type=Path, default=os.environ.get("WAN_ANIMATE_CKPT"))
+    p.add_argument("--wan-python", default=os.environ.get("WAN_PYTHON", sys.executable))
+    args = p.parse_args(argv)
+    return doctor.main(args.wan_repo, args.ckpt, args.wan_python)
+
+
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["doctor"]:
+        return _doctor(argv[1:])
     args = build_parser().parse_args(argv)
     if args.wan_repo is None or args.ckpt is None:
         print("エラー: --wan-repo と --ckpt（または WAN_REPO / WAN_ANIMATE_CKPT）を指定してください", file=sys.stderr)

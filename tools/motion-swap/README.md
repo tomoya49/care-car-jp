@@ -36,6 +36,38 @@
 
 ## セットアップ
 
+### かんたんな方法（Windows の WSL2 / Ubuntu 24.04）
+
+```bash
+git clone https://github.com/tomoya49/care-car-jp.git ~/care-car-jp
+bash ~/care-car-jp/tools/motion-swap/setup_wsl.sh
+```
+
+`setup_wsl.sh` は次の7つを順に行います。
+
+1. GPU の確認
+2. 必要な道具を入れる
+3. Wan2.2 本体を入れる（動作を確かめた版に固定）
+4. Python の部品を入れる（PyTorch 2.8 / CUDA 12.8）
+5. flash_attn の組み立て済み版を入れる
+6. 重み（数十GB）をダウンロードする
+7. 設定を `~/.bashrc` に保存する
+
+- 何度実行しても大丈夫です。重みのダウンロードは、途中で止まっても続きから入ります
+- 最後に、準備がそろっているかの確認（`motion-swap doctor`）が自動で走ります
+
+Wan2.2-Animate は flash_attn がないと動きません。代わりの仕組みに切り替わらない作りです。Windows のままだと flash_attn を自分で組み立てる必要があり、とても入りにくいので、WSL2 を使います。
+
+### 準備の確認
+
+```bash
+motion-swap doctor
+```
+
+ffmpeg、Wan2.2、重みのファイル、PyTorch、GPU、flash_attn などを OK／NG の一覧で表示します。足りないものがあれば、直し方も表示します。VRAM に合わせて `--low-vram` などのおすすめの指定も出ます。
+
+### 手作業でする場合
+
 ```bash
 # 1) Wan2.2 本体（このツールとは別の場所に）
 git clone https://github.com/Wan-Video/Wan2.2.git
