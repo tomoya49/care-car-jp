@@ -41,6 +41,11 @@ except Exception as e:
     r["flash_attn_error"] = repr(e)
 for mod in ["wan", "sam2", "decord", "onnxruntime"]:
     r["mod_" + mod] = importlib.util.find_spec(mod) is not None
+try:
+    from sam2 import _C  # 人物マスクの穴埋めに使う GPU 用の部品（組み立てが必要）
+    r["sam2_C"] = True
+except Exception:
+    r["sam2_C"] = False
 print(json.dumps(r))
 """
 
@@ -106,7 +111,12 @@ def run_checks(repo: Path | None, ckpt: Path | None, python: str, probe: dict | 
     for mod, name in [("wan", "Wan2.2 のコード"), ("sam2", "SAM 2（人物の切り抜き）"),
                       ("decord", "decord（動画読み込み）"), ("onnxruntime", "onnxruntime（骨格の抽出）")]:
         ok = p.get("mod_" + mod, False)
-        checks.append(Check(ok, name, "" if ok else "pip install -r requirements_animate.txt をやり直してください"))
+        checks.append(Check(ok, name, "" if ok else "setup_wsl.sh をもう一度実行してください"))
+    if p.get("mod_sam2"):
+        ok = p.get("sam2_C", False)
+        checks.append(Check(ok, "SAM 2 の GPU 用部品（組み立て済みか）",
+                            "" if ok else "CUDA ツールキットがないまま入った可能性があります。"
+                            "setup_wsl.sh をもう一度実行してください"))
     return checks
 
 
