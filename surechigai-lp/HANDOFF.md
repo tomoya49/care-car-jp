@@ -19,6 +19,12 @@
 **注意：** Supabase の無料枠（動かせるプロジェクトは2つまで）の上限のため、**genba-parking を一時停止**しています。
 genba-parking を使う場合はダッシュボードで再開してください（無料枠が埋まるので、どれか1つを止める必要があります）。
 
+**Supabase のアカウントについて（2026-10-16）：** `surechigai-lp` と `genba-parking` は「tomoya49's Org」にありますが、
+いまブラウザでは別アカウント（tomoyafuji49-alt）に自動ログインされてしまい、ダッシュボードに入れていません。
+当面はこのまま tomoya49 側を使います。Claude の Supabase コネクタは tomoya49 側につながっているので、
+登録者の確認や集計は Claude に頼めば SQL で見られます。ダッシュボードで CSV を書き出したり genba-parking を削除したりするには、
+tomoya49 の GitHub でログインし直す必要があります（シークレットウィンドウで github.com から tomoya49 にログイン → Supabase で「Continue with GitHub」）。
+
 ## これまでの経緯
 
 1. LP・フォーム・`/api/register`（zod による入力検証、ハニーポット、簡易レート制限、UTM保存）を実装した
