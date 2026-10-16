@@ -4,7 +4,7 @@ import { APP_NAME } from "@/lib/config";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-night-950 px-5 pt-10 pb-28 text-sm text-mist">
+    <footer className="bg-ink px-5 pt-10 pb-28 text-sm text-white/80">
       <div className="mx-auto max-w-3xl">
         <Link href="/" className="font-bold text-white">
           {APP_NAME}
@@ -20,8 +20,8 @@ export default function Footer() {
             ))}
           </ul>
         </nav>
-        <p className="mt-6 text-xs leading-relaxed text-mist/70">{content.footer.note}</p>
-        <p className="mt-4 text-xs text-mist/50">
+        <p className="mt-6 text-xs leading-relaxed text-white/60">{content.footer.note}</p>
+        <p className="mt-4 text-xs text-white/40">
           © {new Date().getFullYear()} {APP_NAME}
         </p>
       </div>

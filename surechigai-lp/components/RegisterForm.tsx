@@ -95,16 +95,16 @@ export default function RegisterForm() {
       <div
         role="status"
         aria-live="polite"
-        className="rounded-2xl border border-ember-400/40 bg-night-800 p-6 text-center"
+        className="rounded-3xl bg-blush p-6 text-center"
       >
         <div
           aria-hidden
-          className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-ember-500 text-2xl text-night-950"
+          className="mx-auto mb-4 grid size-14 place-items-center rounded-full bg-pink-500 text-2xl text-white shadow-md"
         >
-          ✓
+          ♡
         </div>
         <p className="text-lg font-bold">{m.title}</p>
-        <p className="mt-2 text-sm leading-relaxed text-mist">{m.body}</p>
+        <p className="mt-2 text-sm leading-relaxed text-ink-soft">{m.body}</p>
       </div>
     );
   }
@@ -112,7 +112,7 @@ export default function RegisterForm() {
   const has = (k: FieldKey) => errors.includes(k);
   const errorText = (k: FieldKey) =>
     has(k) ? (
-      <p id={`${k}-error`} className="mt-1.5 text-sm text-ember-300">
+      <p id={`${k}-error`} className="mt-1.5 text-sm font-bold text-pink-500">
         {f.errors[k]}
       </p>
     ) : null;
@@ -120,7 +120,7 @@ export default function RegisterForm() {
   const tag = (required: boolean) => (
     <span
       className={`ml-2 rounded px-1.5 py-0.5 text-[11px] font-bold ${
-        required ? "bg-ember-500 text-night-950" : "bg-night-600 text-mist"
+        required ? "bg-pink-500 text-white" : "bg-sky text-ink-soft"
       }`}
     >
       {required ? f.required : f.optional}
@@ -128,7 +128,7 @@ export default function RegisterForm() {
   );
 
   const chip =
-    "flex min-h-12 cursor-pointer items-center justify-center rounded-xl border border-night-600 bg-night-900 px-2 text-[15px] whitespace-nowrap transition peer-checked:border-ember-400 peer-checked:bg-ember-500/15 peer-checked:font-bold peer-checked:text-ember-300 peer-focus-visible:ring-2 peer-focus-visible:ring-ember-400";
+    "flex min-h-12 cursor-pointer items-center justify-center rounded-full border-2 border-pink-300/60 bg-white px-2 text-[15px] whitespace-nowrap transition peer-checked:border-pink-500 peer-checked:bg-pink-500 peer-checked:font-bold peer-checked:text-white peer-focus-visible:ring-4 peer-focus-visible:ring-pink-300";
 
   const radioGroup = (
     name: "gender" | "ageGroup" | "area",
@@ -156,13 +156,13 @@ export default function RegisterForm() {
 
   const checkbox = (name: "agreeAge" | "agreePrivacy", children: React.ReactNode) => (
     <div>
-      <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-xl bg-night-900 px-4 py-3">
+      <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl bg-cream px-4 py-3">
         <input
           type="checkbox"
           name={name}
           aria-invalid={has(name)}
           aria-describedby={has(name) ? `${name}-error` : undefined}
-          className="size-5 shrink-0 accent-ember-500"
+          className="size-5 shrink-0 accent-pink-500"
         />
         <span className="text-[15px]">
           {children}
@@ -189,7 +189,7 @@ export default function RegisterForm() {
           placeholder={f.email.placeholder}
           aria-invalid={has("email")}
           aria-describedby={has("email") ? "email-error" : undefined}
-          className="block h-13 w-full rounded-xl border border-night-600 bg-night-900 px-4 text-base text-white placeholder:text-mist/50 focus:border-ember-400 focus:outline-none focus:ring-2 focus:ring-ember-400/40"
+          className="block h-13 w-full rounded-2xl border-2 border-pink-300/60 bg-white px-4 text-base text-ink placeholder:text-ink-soft/50 focus:border-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-300/40"
         />
         {errorText("email")}
       </div>
@@ -210,7 +210,7 @@ export default function RegisterForm() {
           "agreePrivacy",
           <>
             {f.agreePrivacyBefore}
-            <Link href="/privacy" target="_blank" className="text-ember-300 underline underline-offset-2">
+            <Link href="/privacy" target="_blank" className="font-bold text-pink-500 underline underline-offset-2">
               {f.agreePrivacyLink}
             </Link>
             {f.agreePrivacyAfter}
@@ -219,7 +219,7 @@ export default function RegisterForm() {
       </div>
 
       {message && (
-        <p role="alert" className="rounded-xl bg-ember-500/10 px-4 py-3 text-sm text-ember-300">
+        <p role="alert" className="rounded-2xl bg-blush px-4 py-3 text-sm font-bold text-pink-500">
           {message}
         </p>
       )}
@@ -227,11 +227,11 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="flex h-14 w-full items-center justify-center rounded-full bg-ember-500 text-lg font-bold text-night-950 shadow-lg shadow-ember-500/25 transition hover:bg-ember-400 active:scale-[0.99] disabled:opacity-60"
+        className="btn-pop flex h-15 w-full items-center justify-center rounded-full text-lg font-bold text-white disabled:opacity-60"
       >
         {submitting ? f.submitting : f.submit}
       </button>
-      <p className="text-center text-xs leading-relaxed text-mist/80">{f.privacyNote}</p>
+      <p className="text-center text-xs leading-relaxed text-ink-soft">{f.privacyNote}</p>
     </form>
   );
 }

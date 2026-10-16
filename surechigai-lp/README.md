@@ -21,7 +21,7 @@ Next.js (App Router) + TypeScript + Tailwind CSS / Supabase / Vercel。
 | OGP画像（1200×630） | `public/og.png` を上書き |
 | ファビコン | `app/icon.svg`、`app/apple-icon.png`（180×180） |
 
-ヒーローの夜景はCSSのグラデーション（`app/globals.css` の `.hero-sky` / `.city-lights`）です。Canvaの素材に差し替える場合は `public/` に画像を置き、`app/page.tsx` のヒーローで `next/image` を使ってください。
+ヒーローのイラストは `public/hero-girl.webp`（AIで生成したイラスト、640×720）です。同じファイル名で上書きすれば差し替わります。実在の会員と誤解されないよう、イラストの下に「※ イラストはイメージです」と表示しています（`content.ts` の `hero.imageNote`）。実写風の人物画像に替える場合も、この注記は残してください。
 
 ## 環境変数
 

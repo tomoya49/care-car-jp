@@ -1,7 +1,17 @@
 import type { Metadata, Viewport } from "next";
+import { Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
 import { content } from "@/content";
 import { APP_NAME, SITE_URL } from "@/lib/config";
+
+// 丸ゴシックでやわらかい印象に。日本語は文字数が多いので preload せず、表示は swap
+const maru = Zen_Maru_Gothic({
+  weight: ["500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  variable: "--font-maru",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -27,14 +37,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b1530",
+  themeColor: "#ffe8ee",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" className={maru.variable}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

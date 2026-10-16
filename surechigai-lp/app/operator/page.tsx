@@ -20,11 +20,11 @@ const rows = [
 export default function OperatorPage() {
   return (
     <SubPage title="運営者情報">
-      <dl className="divide-y divide-white/10 rounded-2xl bg-night-800">
+      <dl className="divide-y divide-pink-300/40 rounded-3xl bg-white shadow-sm">
         {rows.map(([k, v]) => (
           <div key={k} className="px-5 py-4">
-            <dt className="text-xs font-bold text-mist/70">{k}</dt>
-            <dd className="mt-1 text-white">{v}</dd>
+            <dt className="text-xs font-bold text-ink-soft">{k}</dt>
+            <dd className="mt-1 text-ink">{v}</dd>
           </div>
         ))}
       </dl>
@@ -34,7 +34,7 @@ export default function OperatorPage() {
         <p>
           事前登録の内容の確認・削除、その他のお問い合わせは、下記までメールでご連絡ください。削除をご希望の場合は、登録したメールアドレスからお送りください。
         </p>
-        <p className="mt-2 text-white">{OPERATOR.email}</p>
+        <p className="mt-2 text-ink">{OPERATOR.email}</p>
       </section>
     </SubPage>
   );

@@ -25,7 +25,7 @@ export default function StickyCta() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-night-950/90 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur transition-transform duration-300 ${
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-pink-300/40 bg-white/90 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur transition-transform duration-300 ${
         show ? "translate-y-0" : "translate-y-full"
       }`}
       aria-hidden={!show}
@@ -33,7 +33,7 @@ export default function StickyCta() {
       <a
         href="#register"
         tabIndex={show ? 0 : -1}
-        className="mx-auto flex h-13 max-w-md items-center justify-center rounded-full bg-ember-500 text-base font-bold text-night-950"
+        className="btn-pop mx-auto flex h-13 max-w-md items-center justify-center rounded-full text-base font-bold text-white"
       >
         {content.stickyCta}
       </a>
