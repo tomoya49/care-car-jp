@@ -69,6 +69,7 @@ npm run dev        # http://localhost:3000
 ## 手動でやることチェックリスト
 
 - [ ] **インターネット異性紹介事業の届出**（アプリ公開前に必須）。受理番号は `lib/config.ts` の `OPERATOR.notificationNumber` に入力
+- [ ] **先行登録特典の提供**：LPに「先着100名の男性は有料プラン1か月無料」と載せたので、サービス開始時に必ず提供する（対象は `pre_registrations` の gender = male を created_at 順に100名、テストデータを除く。文言は `content.ts` の `perk`）
 - [ ] アプリ名：`lib/config.ts` の `APP_NAME` を変える（1か所だけ）
 - [ ] 運営者名・所在地・連絡先：`lib/config.ts` の `OPERATOR`
 - [ ] プライバシーポリシー：`app/privacy/page.tsx` を弁護士・行政書士に確認してもらう。制定日も入力

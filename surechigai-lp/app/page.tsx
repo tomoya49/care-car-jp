@@ -27,6 +27,19 @@ function PreLaunchBadge() {
   );
 }
 
+function PerkBox() {
+  return (
+    <div className="relative mt-8 rounded-[2rem] border-4 border-dashed border-coral-400 bg-white p-6 text-center">
+      <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-coral-500 px-4 py-1 text-xs font-bold whitespace-nowrap text-white shadow">
+        🎁 {c.perk.badge}
+      </span>
+      <p className="mt-2 text-xl font-bold sm:text-2xl">{c.perk.title}</p>
+      <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{c.perk.body}</p>
+      <p className="mt-3 text-xs leading-relaxed text-ink-soft">{c.perk.note}</p>
+    </div>
+  );
+}
+
 const empathyIcons = ["🚉", "📱", "🏠"];
 const empathyBg = ["bg-blush", "bg-sky", "bg-lemon"];
 const stepBg = ["bg-pink-400", "bg-coral-400", "bg-[#8fb8ff]"];
@@ -86,7 +99,11 @@ export default function Home() {
                 ))}
               </h1>
               <p className="mt-4 hidden max-w-md text-[15px] leading-relaxed text-ink-soft sm:block">{c.hero.sub}</p>
-              <div className="mx-auto mt-5 max-w-sm sm:mx-0 sm:mt-7">
+              <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-lemon px-3.5 py-1.5 text-[13px] font-bold shadow-sm">
+                <span aria-hidden>🎁</span>
+                {c.perk.short}
+              </p>
+              <div className="mx-auto mt-4 max-w-sm sm:mx-0 sm:mt-5">
                 <a
                   id="hero-cta"
                   href="#register"
@@ -207,6 +224,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            <PerkBox />
           </div>
         </section>
 
@@ -242,6 +260,10 @@ export default function Home() {
             <SectionHeading en="ENTRY" lead={c.form.lead}>
               {c.form.heading}
             </SectionHeading>
+            <p className="mb-4 flex items-center justify-center gap-1.5 rounded-2xl bg-lemon px-4 py-3 text-center text-sm font-bold">
+              <span aria-hidden>🎁</span>
+              {c.perk.short}
+            </p>
             <div className="rounded-[2rem] bg-white p-5 shadow-xl shadow-coral-400/15 sm:p-8">
               <RegisterForm />
             </div>
