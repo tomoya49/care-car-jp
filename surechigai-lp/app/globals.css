@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ポップで可愛い雰囲気：クリーム地 + ピンク / コーラル、文字は読みやすい濃紺 */
+@theme {
+  --color-ink: #2a2f5b;
+  --color-ink-soft: #5b6188;
+  --color-cream: #fff8f1;
+  --color-blush: #ffe8ee;
+  --color-peach: #ffe9dc;
+  --color-sky: #e4eeff;
+  --color-mint: #dcf5ec;
+  --color-lemon: #fff3c4;
+  --color-pink-300: #ffb3c8;
+  --color-pink-400: #ff8fb0;
+  --color-pink-500: #ff6f98;
+  --color-coral-400: #ff9a76;
+  --color-coral-500: #ff7a59;
+  --font-sans: var(--font-maru), "Hiragino Maru Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+    "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-feature-settings: "palt";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .float-slow {
+    animation: none !important;
+  }
+}
+
+/* ヒーロー背景：パステルのドット + ふんわりグラデーション */
+.hero-pop {
+  background:
+    radial-gradient(circle at 12% 18%, rgb(255 143 176 / 0.35) 0 90px, transparent 91px),
+    radial-gradient(circle at 92% 8%, rgb(255 211 102 / 0.45) 0 70px, transparent 71px),
+    radial-gradient(circle at 85% 70%, rgb(164 210 255 / 0.4) 0 110px, transparent 111px),
+    linear-gradient(180deg, #ffe8ee 0%, #fff3e8 60%, #fff8f1 100%);
+}
+
+.dots {
+  background-image: radial-gradient(rgb(255 111 152 / 0.22) 2px, transparent 2.5px);
+  background-size: 22px 22px;
+}
+
+/* ボタンのぷっくり感 */
+.btn-pop {
+  background: linear-gradient(180deg, #ff8fb0 0%, #ff6f98 100%);
+  box-shadow:
+    0 6px 0 #e2507c,
+    0 12px 24px rgb(255 111 152 / 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.btn-pop:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #e2507c,
+    0 6px 12px rgb(255 111 152 / 0.3);
+}
+
+/* 波型の区切り */
+.wave-top {
+  position: relative;
+}
+.wave-top::before {
+  content: "";
+  position: absolute;
+  inset: -23px 0 auto 0;
+  height: 24px;
+  background: inherit;
+  -webkit-mask: radial-gradient(14px 12px at 50% 100%, #000 98%, transparent) 0 0 / 28px 24px repeat-x;
+  mask: radial-gradient(14px 12px at 50% 100%, #000 98%, transparent) 0 0 / 28px 24px repeat-x;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.float-slow {
+  animation: float 5s ease-in-out infinite;
+}
